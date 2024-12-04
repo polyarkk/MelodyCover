@@ -2,130 +2,93 @@ package com.skopzz.melodycover.cover
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.PixelFormat
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.widget.LinearLayout
-import com.skopzz.melodycover.getWindowManager
-import com.skopzz.melodycover.preference.PreferenceManager
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 
-@SuppressLint("ViewConstructor")
-class Cover @SuppressLint("ClickableViewAccessibility") constructor(private val ctx: Context) :
-    LinearLayout(ctx) {
-    private var x = 0
-    private var y = 0
-    private var touchX = 0f
-    private var touchY = 0f
+@SuppressLint("ViewConstructor", "SetTextI18n")
+class Cover(
+  val ctx: Context,
+  var configuration: CoverConfiguration = CoverConfiguration(),
+  editMode: Boolean = false, // todo
+) : LinearLayout(ctx) {
+  val layoutParams: LayoutParams = LayoutParams(
+    configuration.width,
+    configuration.height
+  )
 
-    private val layoutParams = WindowManager.LayoutParams(
-        400, 150,
-        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-        PixelFormat.TRANSLUCENT
-    )
+  var editModeTextView: TextView? = null;
 
-    private val preferenceManager: PreferenceManager
-
-    init {
-        layoutParams.x = 0
-        layoutParams.y = 0
-        layoutParams.gravity = Gravity.CENTER_HORIZONTAL or Gravity.TOP
-
-        preferenceManager = PreferenceManager.instance!!
-
-        setBackgroundColor(preferenceManager.get("pick_color", -0x9596))
-        setLayoutParams(
-            LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
+  init {
+    setLayoutParams(layoutParams)
+    update(configuration)
+    if (editMode) {
+      editModeTextView = TextView(ctx).apply {
+        text = "${this@Cover.layoutParams.width}x${this@Cover.layoutParams.height}"
+        textSize = 20f
+        setTextColor(Color.BLACK)
+        setBackgroundColor(Color.WHITE)
+        setTypeface(null, Typeface.BOLD)
+        setPadding(8, 8, 8, 8)
+        layoutParams = LayoutParams(
+          LayoutParams.WRAP_CONTENT,
+          LayoutParams.WRAP_CONTENT
         )
+      }
+
+      addView(editModeTextView)
     }
+  }
 
-    private fun onTouch(e: MotionEvent): Boolean {
-        when (e.action) {
-            MotionEvent.ACTION_DOWN -> {
-                x = layoutParams.x
-                touchX = e.rawX
-
-                y = layoutParams.y
-                touchY = e.rawY
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                if (!preferenceManager.get("lock_vertical_position", false)) {
-                    layoutParams.x = (x + e.rawX - touchX).toInt()
-                }
-
-                if (!preferenceManager.get("lock_horizontal_position", false)) {
-                    layoutParams.y = (y + e.rawY - touchY).toInt()
-                }
-
-                updateView()
-            }
-
-            else -> {}
+  fun update(conf: CoverConfiguration) {
+    when (conf.coverType) {
+      CoverType.COLOR -> {
+        if (background == null
+          || background !is ColorDrawable
+          || conf.color != configuration.color
+        ) {
+          background = ColorDrawable(conf.color.toInt())
         }
 
-        return false
-    }
+        layoutParams.width = conf.width
+        layoutParams.height = conf.height
+      }
 
-    fun setColor(color: Int) {
-        setBackgroundColor(color)
-    }
+      CoverType.IMAGE -> {
+        val drawable = if (background == null
+          || background !is CoverImageDrawable
+          || conf.imageUpdateMs != configuration.imageUpdateMs
+        ) {
+          CoverImageDrawable(
+            Drawable.createFromPath(conf.imagePath)
+              ?: ResourcesCompat.getDrawable(ctx.resources, conf.imageId, null)!!
+          )
+        } else {
+          background
+        } as CoverImageDrawable
 
-    fun setX(x: Int) {
-        layoutParams.x = 0
-
-        updateView()
-    }
-
-    fun setY(y: Int) {
-        layoutParams.y = 0
-
-        updateView()
-    }
-
-    private fun updateView() {
-        getWindowManager(ctx).updateViewLayout(this, layoutParams)
-    }
-
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        var instance: Cover? = null
-            private set
-
-        @SuppressLint("ClickableViewAccessibility")
-        fun create(ctx: Context) {
-            instance = Cover(ctx)
-
-            instance!!.setOnTouchListener { _: View, e: MotionEvent ->
-                instance!!.onTouch(e)
-            }
-
-            getWindowManager(ctx).addView(instance, instance!!.layoutParams)
+        drawable.apply {
+          scale = conf.imageScale
+          setLayerInset(0, conf.imageInsetR, conf.imageInsetB, conf.imageInsetL, conf.imageInsetT)
+          update()
         }
 
-        fun destroy(ctx: Context) {
-            getWindowManager(ctx).removeView(instance)
+        layoutParams.width = ((drawable.width - conf.imageInsetL - conf.imageInsetR) * conf.imageScale).toInt()
+        layoutParams.height = ((drawable.height - conf.imageInsetT - conf.imageInsetB) * conf.imageScale).toInt()
 
-            instance = null
-        }
-
-        fun toggle(ctx: Context): Boolean {
-            if (isShowing) {
-                destroy(ctx)
-            } else {
-                create(ctx)
-            }
-
-            return isShowing
-        }
-
-        val isShowing: Boolean
-            get() = instance != null
+        background = drawable
+      }
     }
+
+    if (editModeTextView != null) {
+      editModeTextView!!.text = "${layoutParams.width}x${layoutParams.height}"
+    }
+
+    configuration = conf
+    requestLayout()
+  }
 }

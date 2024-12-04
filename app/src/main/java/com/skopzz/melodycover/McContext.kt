@@ -4,6 +4,6 @@ import android.content.Context
 import androidx.navigation.NavController
 
 class McContext(
-    val context: Context,
-    val navController: NavController,
+  val context: Context,
+  val navController: NavController,
 )
