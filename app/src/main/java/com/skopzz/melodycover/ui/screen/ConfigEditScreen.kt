@@ -1,11 +1,15 @@
 package com.skopzz.melodycover.ui.screen
 
+import android.content.ContentValues.TAG
+import android.content.Context
+import android.preference.PreferenceManager
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,14 +19,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
@@ -32,26 +34,58 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.skopzz.melodycover.McContext
 import com.skopzz.melodycover.cover.CoverType
-import com.skopzz.melodycover.util.getResourceBitmapSize
-import com.skopzz.melodycover.util.getFileBitmapSize
-import com.skopzz.melodycover.util.roundTo
-import com.skopzz.melodycover.ui.component.preference.ColorPreference
+import com.skopzz.melodycover.cover.getImagePath
+import com.skopzz.melodycover.cover.saveCoverConfiguration
+import com.skopzz.melodycover.service.CoverService
+import com.skopzz.melodycover.ui.ConfigRoute
+import com.skopzz.melodycover.ui.MainRoute
 import com.skopzz.melodycover.ui.component.CoverPreview
 import com.skopzz.melodycover.ui.component.preference.BasePreference
+import com.skopzz.melodycover.ui.component.preference.ColorPreference
 import com.skopzz.melodycover.ui.component.preference.EnumPreference
 import com.skopzz.melodycover.ui.component.preference.SliderPreference
+import com.skopzz.melodycover.ui.component.preference.TextFieldPreference
 import com.skopzz.melodycover.util.copyFileFromUri
+import com.skopzz.melodycover.util.get
+import com.skopzz.melodycover.util.getFileBitmapSize
+import com.skopzz.melodycover.util.getResourceBitmapSize
+import com.skopzz.melodycover.util.roundTo
+import java.nio.file.Files
+import kotlin.io.path.Path
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConfigEditScreen(ctx: McContext, key: String, vm: ConfigEditViewModel = viewModel()) {
+fun ConfigEditScreen(nav: NavController, key: String) {
+  val vm = viewModel(factory = ConfigEditViewModel.Factory(key)) as ConfigEditViewModel
   val uiState by vm.uiState.collectAsState()
 
   val scrollState = rememberScrollState()
+  val serviceRunning by CoverService.isRunning.collectAsState()
+
+  val ctx = LocalContext.current
+
+  fun handleBack() {
+    saveCoverConfiguration(uiState.conf)
+
+    if (serviceRunning
+      && PreferenceManager
+        .getDefaultSharedPreferences(ctx)
+        .get("cover_config", "default") == key
+    ) {
+      CoverService.sendIo(ctx, "reload", 1)
+    }
+
+    nav.popBackStack(MainRoute, false)
+    nav.navigate(ConfigRoute)
+  }
 
   val pickMedia = rememberLauncherForActivityResult(PickVisualMedia()) { uri ->
     vm.updateConfiguration {
@@ -59,11 +93,15 @@ fun ConfigEditScreen(ctx: McContext, key: String, vm: ConfigEditViewModel = view
         return@updateConfiguration it
       }
 
-      val file = ctx.context.copyFileFromUri(uri, "bar.coverImg")
+      ctx.copyFileFromUri(uri, "covers/${uiState.conf.key}/cover_img")
 
       // change imageUpdateMs for a force update
-      it.copy(imagePath = file.path, imageUpdateMs = System.currentTimeMillis())
+      it.copy(imageUpdateMs = System.currentTimeMillis())
     }
+  }
+
+  BackHandler {
+    handleBack()
   }
 
   Scaffold(
@@ -76,7 +114,7 @@ fun ConfigEditScreen(ctx: McContext, key: String, vm: ConfigEditViewModel = view
         ),
         navigationIcon = {
           IconButton(onClick = {
-            ctx.navController.navigateUp()
+            handleBack()
           }) {
             Icon(
               Icons.AutoMirrored.Default.ArrowBack,
@@ -84,33 +122,21 @@ fun ConfigEditScreen(ctx: McContext, key: String, vm: ConfigEditViewModel = view
             )
           }
         },
-        title = { Text("配置：%s".format(uiState.conf.name)) },
-        actions = {
-          TextButton(onClick = {
-
-          }) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-              Icon(
-                Icons.Default.Check,
-                contentDescription = "nope",
-              )
-              Text("应用当前配置")
-            }
-          }
-        }
+        title = { Text("修改配置") },
+        actions = { }
       )
     }
   ) { innerPadding ->
     Column(
       horizontalAlignment = Alignment.CenterHorizontally,
       modifier = Modifier
-          .fillMaxSize()
-          .padding(innerPadding)
+        .fillMaxSize()
+        .padding(innerPadding)
     ) {
       Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(400.dp),
+          .fillMaxWidth()
+          .height(400.dp),
         contentAlignment = Alignment.Center,
       ) {
         CoverPreview(uiState.conf)
@@ -120,6 +146,15 @@ fun ConfigEditScreen(ctx: McContext, key: String, vm: ConfigEditViewModel = view
           .widthIn(max = 800.dp)
           .verticalScroll(scrollState),
       ) {
+        TextFieldPreference(
+          title = { Text("名称") },
+          v = uiState.conf.name,
+          onValueChange = { v ->
+            vm.updateConfiguration {
+              it.copy(name = v)
+            }
+          }
+        )
         EnumPreference(
           title = { Text("上隐条类型") },
           summary = {
@@ -175,23 +210,23 @@ fun ConfigEditScreen(ctx: McContext, key: String, vm: ConfigEditViewModel = view
               range = 0..1000
             )
           }
+
           CoverType.IMAGE -> {
             val maxSize by remember {
               derivedStateOf {
-                if (uiState.conf.imagePath != null) {
-                  getFileBitmapSize(uiState.conf.imagePath!!)
+                val path = uiState.conf.getImagePath()
+
+                if (Files.exists(Path(path))) {
+                  getFileBitmapSize(path)
                 } else {
-                  ctx.context.getResourceBitmapSize(uiState.conf.imageId)
+                  ctx.getResourceBitmapSize(uiState.conf.imageId)
                 }
               }
             }
 
             BasePreference(
-              title = { Text("图片路径") },
-              summary = {
-                Text("$it")
-              },
-              v = uiState.conf.imagePath ?: uiState.conf.imageId,
+              title = { Text("选择图片") },
+              v = null,
               onClick = {
                 pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
               }

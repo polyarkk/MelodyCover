@@ -1,5 +1,11 @@
 package com.skopzz.melodycover.util
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
-fun defaultJson(): Json = Json { encodeDefaults = true }
+@OptIn(ExperimentalSerializationApi::class)
+fun defaultJson(): Json = Json {
+  encodeDefaults = true
+  prettyPrint = true
+  prettyPrintIndent = " ".repeat(2)
+}

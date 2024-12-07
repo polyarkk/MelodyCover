@@ -41,7 +41,7 @@ max_line_length = 80
 ij_declarative_keep_indents_on_empty_lines = false
 
 [*.java]
-ij_continuation_indent_size = 4
+ij_continuation_indent_size = 2
 ij_java_align_consecutive_assignments = false
 ij_java_align_consecutive_variable_declarations = false
 ij_java_align_group_field_declarations = false
@@ -375,7 +375,7 @@ ij_less_value_alignment = 0
 [*.nbtt]
 indent_style = tab
 max_line_length = 150
-ij_continuation_indent_size = 4
+ij_continuation_indent_size = 2
 ij_nbtt_keep_indents_on_empty_lines = false
 ij_nbtt_space_after_colon = true
 ij_nbtt_space_after_comma = true
@@ -387,7 +387,7 @@ ij_nbtt_spaces_within_parentheses = false
 [*.proto]
 indent_size = 2
 tab_width = 2
-ij_continuation_indent_size = 4
+ij_continuation_indent_size = 2
 ij_protobuf_keep_blank_lines_in_code = 2
 ij_protobuf_keep_indents_on_empty_lines = false
 ij_protobuf_keep_line_breaks = true
@@ -399,7 +399,7 @@ ij_protobuf_spaces_within_brackets = false
 
 [*.rs]
 max_line_length = 100
-ij_continuation_indent_size = 4
+ij_continuation_indent_size = 2
 ij_rust_align_multiline_chained_methods = false
 ij_rust_align_multiline_parameters = true
 ij_rust_align_multiline_parameters_in_calls = true
@@ -475,7 +475,7 @@ ij_scss_value_alignment = 0
 [*.vue]
 indent_size = 2
 tab_width = 2
-ij_continuation_indent_size = 4
+ij_continuation_indent_size = 2
 ij_vue_indent_children_of_top_level = template
 ij_vue_interpolation_new_line_after_start_delimiter = true
 ij_vue_interpolation_new_line_before_end_delimiter = true
@@ -1116,7 +1116,7 @@ ij_html_text_wrap = normal
 
 [{*.http,*.rest}]
 indent_size = 0
-ij_continuation_indent_size = 4
+ij_continuation_indent_size = 2
 ij_http-request_call_parameters_wrap = normal
 ij_http-request_method_parameters_wrap = split_into_lines
 ij_http-request_space_before_comma = true
@@ -1130,14 +1130,14 @@ ij_jsp_keep_indents_on_empty_lines = false
 ij_jspx_keep_indents_on_empty_lines = false
 
 [{*.kt,*.kts}]
-ij_continuation_indent_size = 4
+ij_continuation_indent_size = 2
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
 ij_kotlin_align_multiline_extends_list = false
 ij_kotlin_align_multiline_method_parentheses = false
 ij_kotlin_align_multiline_parameters = true
 ij_kotlin_align_multiline_parameters_in_calls = false
-ij_kotlin_allow_trailing_comma = false
+ij_kotlin_allow_trailing_comma = true
 ij_kotlin_allow_trailing_comma_on_call_site = false
 ij_kotlin_assignment_wrap = normal
 ij_kotlin_blank_lines_after_class_header = 0
@@ -1236,7 +1236,7 @@ ij_markdown_wrap_text_inside_blockquotes = true
 [{*.pb,*.textproto,*.txtpb}]
 indent_size = 2
 tab_width = 2
-ij_continuation_indent_size = 4
+ij_continuation_indent_size = 2
 ij_prototext_keep_blank_lines_in_code = 2
 ij_prototext_keep_indents_on_empty_lines = false
 ij_prototext_keep_line_breaks = true

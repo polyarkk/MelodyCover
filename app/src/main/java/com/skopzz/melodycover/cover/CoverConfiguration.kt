@@ -1,7 +1,11 @@
 package com.skopzz.melodycover.cover
 
+import com.skopzz.melodycover.COVER_DIR
 import com.skopzz.melodycover.R
+import com.skopzz.melodycover.util.defaultJson
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import java.io.File
 
 @Serializable
 data class CoverConfiguration(
@@ -26,11 +30,6 @@ data class CoverConfiguration(
 
   var height: Int = 150,
 
-  /**
-   * 图片路径
-   */
-  var imagePath: String? = "/storage/emulated/0/Android/data/com.skopzz.melodycover/files/bar.coverImg",
-
   var imageId: Int = R.drawable.sample_image,
 
   /**
@@ -48,3 +47,35 @@ data class CoverConfiguration(
 
   var imageUpdateMs: Long = System.currentTimeMillis(),
 )
+
+fun CoverConfiguration.getImagePath(): String = "$COVER_DIR/$key/cover_img"
+fun CoverConfiguration.getConfigPath(): String = "$COVER_DIR/$key/config.json"
+
+fun existsCoverConfiguration(key: String): Boolean = File("$COVER_DIR/$key/config.json").exists()
+
+fun saveCoverConfiguration(conf: CoverConfiguration) {
+  val json = defaultJson().encodeToString(conf)
+
+  val file = File(conf.getConfigPath())
+
+  if (file.exists()) {
+    file.delete()
+  } else {
+    file.parentFile?.mkdirs()
+  }
+
+  file.createNewFile()
+  file.writeText(json)
+}
+
+fun loadCoverConfiguration(key: String): CoverConfiguration? {
+  val file = File("$COVER_DIR/$key/config.json")
+
+  if (!file.exists()) {
+    return null
+  }
+
+  val json = file.readText()
+
+  return defaultJson().decodeFromString(json)
+}

@@ -62,9 +62,10 @@ class Cover(
         val drawable = if (background == null
           || background !is CoverImageDrawable
           || conf.imageUpdateMs != configuration.imageUpdateMs
+          || conf.key != configuration.key
         ) {
           CoverImageDrawable(
-            Drawable.createFromPath(conf.imagePath)
+            Drawable.createFromPath(conf.getImagePath())
               ?: ResourcesCompat.getDrawable(ctx.resources, conf.imageId, null)!!
           )
         } else {

@@ -24,65 +24,65 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 inline fun <T : Enum<T>> EnumSelectDialog(
-    crossinline title: @Composable (T) -> Unit,
-    defaultValue: T,
-    values: List<T>,
-    displays: List<String>,
-    crossinline onValueChange: (T) -> Unit,
-    noinline onDismissRequest: () -> Unit,
+  crossinline title: @Composable (T) -> Unit,
+  defaultValue: T,
+  values: List<T>,
+  displays: List<String>,
+  crossinline onValueChange: (T) -> Unit,
+  noinline onDismissRequest: () -> Unit,
 ) {
-    BasicAlertDialog(onDismissRequest = onDismissRequest) {
-        Card(
-            modifier = Modifier.Companion
-                .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-        ) {
-            LazyColumn(
-                modifier = Modifier.Companion
-                    .fillMaxWidth()
-                    .padding(16.dp),
-            ) {
-                item("t") {
-                    ProvideTextStyle(
-                        value = MaterialTheme.typography.titleMedium,
-                        content = { title(defaultValue) }
-                    )
-                }
-                items(values.size) {
-                    val selected = values[it] == defaultValue
-
-                    Row(
-                        verticalAlignment = Alignment.Companion.CenterVertically,
-                        modifier = Modifier.Companion
-                            .fillMaxWidth()
-                            .selectable(
-                                selected = selected,
-                                enabled = true,
-                                role = Role.Companion.RadioButton,
-                                onClick = {
-                                    onValueChange(values[it])
-                                    onDismissRequest()
-                                }
-                            ),
-                    ) {
-                        RadioButton(selected, onClick = { })
-                        Text(displays[it])
-                    }
-                }
-                item("c") {
-                    Row {
-                        Spacer(Modifier.Companion.weight(0.3f))
-                        TextButton(
-                            onClick = {
-                                onDismissRequest()
-                            },
-                        ) {
-                            Text("取消")
-                        }
-                    }
-                }
-            }
+  BasicAlertDialog(onDismissRequest = onDismissRequest) {
+    Card(
+      modifier = Modifier.Companion
+        .fillMaxWidth()
+        .padding(16.dp),
+      shape = RoundedCornerShape(16.dp),
+    ) {
+      LazyColumn(
+        modifier = Modifier.Companion
+          .fillMaxWidth()
+          .padding(16.dp),
+      ) {
+        item("t") {
+          ProvideTextStyle(
+            value = MaterialTheme.typography.titleMedium,
+            content = { title(defaultValue) }
+          )
         }
+        items(values.size) {
+          val selected = values[it] == defaultValue
+
+          Row(
+            verticalAlignment = Alignment.Companion.CenterVertically,
+            modifier = Modifier.Companion
+              .fillMaxWidth()
+              .selectable(
+                selected = selected,
+                enabled = true,
+                role = Role.Companion.RadioButton,
+                onClick = {
+                  onValueChange(values[it])
+                  onDismissRequest()
+                }
+              ),
+          ) {
+            RadioButton(selected, onClick = { })
+            Text(displays[it])
+          }
+        }
+        item("c") {
+          Row {
+            Spacer(Modifier.Companion.weight(0.3f))
+            TextButton(
+              onClick = {
+                onDismissRequest()
+              },
+            ) {
+              Text("取消")
+            }
+          }
+        }
+      }
     }
+  }
 }

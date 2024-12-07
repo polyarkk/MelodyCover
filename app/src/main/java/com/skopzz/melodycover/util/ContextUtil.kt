@@ -72,8 +72,14 @@ fun Context.copyFileFromUri(
   toFileName: String,
 ): File {
   val inputStream = contentResolver.openInputStream(uri)
-  val outputFile = File(getExternalFilesDir(null)!!, toFileName) // 或者根据需要生成文件名
+  val outputFile = File(getExternalFilesDir(null)!!, toFileName)
   var outputStream: FileOutputStream? = null
+
+  if (outputFile.exists()) {
+    outputFile.delete()
+  } else {
+    outputFile.parentFile?.mkdirs()
+  }
 
   return try {
     outputStream = FileOutputStream(outputFile)

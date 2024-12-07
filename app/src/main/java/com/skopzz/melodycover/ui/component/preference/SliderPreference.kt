@@ -18,11 +18,11 @@ inline fun <reified T> SliderPreference(
     v,
     enabled = false,
     bottomWidget = {
-        Slider(
-            valueRange = (range.start.toFloat())..(range.endInclusive.toFloat()),
-            value = v.toFloat(),
-            onValueChange = { onValueChange(it.toSpecificNumber()) }
-        )
+      Slider(
+        valueRange = (range.start.toFloat())..(range.endInclusive.toFloat()),
+        value = v.toFloat(),
+        onValueChange = { onValueChange(it.toSpecificNumber()) }
+      )
     }
   )
 }

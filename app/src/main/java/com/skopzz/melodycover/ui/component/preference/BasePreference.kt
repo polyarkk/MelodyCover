@@ -17,55 +17,55 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun <T> BasePreference(
-    title: @Composable (T) -> Unit,
-    summary: (@Composable (T) -> Unit)? = null,
-    v: T,
-    leftWidget: (@Composable (T) -> Unit)? = null,
-    rightWidget: (@Composable (T) -> Unit)? = null,
-    bottomWidget: (@Composable (T) -> Unit)? = null,
-    enabled: Boolean = true,
-    onClick: (T) -> Unit = {},
+  title: @Composable (T) -> Unit,
+  summary: (@Composable (T) -> Unit)? = null,
+  v: T,
+  leftWidget: (@Composable (T) -> Unit)? = null,
+  rightWidget: (@Composable (T) -> Unit)? = null,
+  bottomWidget: (@Composable (T) -> Unit)? = null,
+  enabled: Boolean = true,
+  onClick: (T) -> Unit = {},
 ) {
-    Column(
-        modifier = Modifier.Companion.padding(0.dp, 8.dp, 16.dp, 8.dp)
+  Column(
+    modifier = Modifier.Companion.padding(0.dp, 8.dp, 16.dp, 8.dp)
+  ) {
+    Row(
+      modifier = Modifier.Companion
+        .height(48.dp)
+        .clickable(enabled, onClick = { onClick(v) }),
+      verticalAlignment = Alignment.Companion.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.Companion
-                .height(48.dp)
-                .clickable(enabled, onClick = { onClick(v) }),
-            verticalAlignment = Alignment.Companion.CenterVertically
-        ) {
-            if (leftWidget != null) {
-                leftWidget(v)
-            } else {
-                Spacer(Modifier.Companion.size(48.dp))
-            }
-            Column {
-                ProvideTextStyle(
-                    value = MaterialTheme.typography.titleMedium,
-                    content = { title(v) }
-                )
-                if (summary != null) {
-                    ProvideTextStyle(
-                        value = MaterialTheme
-                            .typography
-                            .bodyMedium
-                            .copy(
-                                color = MaterialTheme
-                                    .colorScheme
-                                    .onSurfaceVariant
-                            ),
-                        content = { summary(v) }
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.Companion.weight(1f))
-            rightWidget?.invoke(v)
+      if (leftWidget != null) {
+        leftWidget(v)
+      } else {
+        Spacer(Modifier.Companion.size(48.dp))
+      }
+      Column {
+        ProvideTextStyle(
+          value = MaterialTheme.typography.titleMedium,
+          content = { title(v) }
+        )
+        if (summary != null) {
+          ProvideTextStyle(
+            value = MaterialTheme
+              .typography
+              .bodyMedium
+              .copy(
+                color = MaterialTheme
+                  .colorScheme
+                  .onSurfaceVariant
+              ),
+            content = { summary(v) }
+          )
         }
-        if (bottomWidget != null) {
-            Box(modifier = Modifier.Companion.padding(start = 16.dp)) {
-                bottomWidget(v)
-            }
-        }
+      }
+      Spacer(modifier = Modifier.Companion.weight(1f))
+      rightWidget?.invoke(v)
     }
+    if (bottomWidget != null) {
+      Box(modifier = Modifier.Companion.padding(start = 16.dp)) {
+        bottomWidget(v)
+      }
+    }
+  }
 }

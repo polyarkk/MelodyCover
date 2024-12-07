@@ -9,7 +9,6 @@ import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,6 +17,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.skopzz.melodycover.cover.CoverConfiguration
+import com.skopzz.melodycover.cover.existsCoverConfiguration
+import com.skopzz.melodycover.cover.saveCoverConfiguration
 import com.skopzz.melodycover.ui.theme.MelodyCoverTheme
 
 class MainActivity : ComponentActivity() {
@@ -43,6 +45,10 @@ class MainActivity : ComponentActivity() {
       requestPermissions.launch(arrayOf(READ_MEDIA_IMAGES))
     } else {
       requestPermissions.launch(arrayOf(READ_EXTERNAL_STORAGE))
+    }
+
+    if (!existsCoverConfiguration("default")) {
+      saveCoverConfiguration(CoverConfiguration())
     }
 
     enableEdgeToEdge()

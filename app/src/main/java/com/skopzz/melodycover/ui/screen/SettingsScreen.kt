@@ -18,7 +18,11 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.skopzz.melodycover.McContext
 import com.skopzz.melodycover.service.CoverService
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
@@ -28,7 +32,9 @@ import me.zhanghai.compose.preference.switchPreference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(ctx: McContext) {
+fun SettingsScreen(nav: NavController) {
+  val ctx = LocalContext.current
+
   Scaffold(
     modifier = Modifier.fillMaxSize(),
     topBar = {
@@ -38,7 +44,7 @@ fun SettingsScreen(ctx: McContext) {
           titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         navigationIcon = {
-          IconButton(onClick = { ctx.navController.navigateUp() }) {
+          IconButton(onClick = { nav.navigateUp() }) {
             Icon(
               Icons.AutoMirrored.Default.ArrowBack,
               contentDescription = "nope",
@@ -73,7 +79,7 @@ fun SettingsScreen(ctx: McContext) {
             title = { Text("重置水平位置") },
             summary = { Text("将上隐条置于水平居中位置") },
             onClick = {
-              CoverService.sendIo(ctx.context, "setX", 0)
+              CoverService.sendIo(ctx, "setX", 0)
             }
           )
           switchPreference(
@@ -86,7 +92,7 @@ fun SettingsScreen(ctx: McContext) {
             title = { Text("重置垂直位置") },
             summary = { Text("将上隐条置于顶部位置") },
             onClick = {
-              CoverService.sendIo(ctx.context, "setY", 0)
+              CoverService.sendIo(ctx, "setY", 0)
             }
           )
           preferenceCategory("gesture", { Text("手势") })

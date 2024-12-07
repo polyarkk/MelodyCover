@@ -29,12 +29,12 @@ fun isValidArgbHexString(s: String): Boolean {
 fun Color.toHexString(): String = "#${(value shr 32).toString(16)}"
 fun Color.toHex(): ULong = value shr 32
 fun Color.Companion.fromHexString(s: String): Color =
-    Color(
-        if (s.startsWith("#")) {
-            s.substring(1..<s.length)
-        } else {
-            s
-        }.toULong(16) shl 32
-    )
+  Color(
+    if (s.startsWith("#")) {
+      s.substring(1..<s.length)
+    } else {
+      s
+    }.toULong(16) shl 32
+  )
 
 fun Color.Companion.fromHex(u: ULong): Color = Color(u shl 32)

@@ -30,28 +30,34 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.skopzz.melodycover.McContext
 import com.skopzz.melodycover.service.CoverService
 import com.skopzz.melodycover.ui.ConfigRoute
 import com.skopzz.melodycover.ui.SettingsRoute
 
 @Composable
-fun MainScreen(ctx: McContext) {
-  var permGranted by remember { mutableStateOf(canDrawOverlays(ctx.context)) }
+fun MainScreen(nav: NavController) {
+  val ctx = LocalContext.current
+
+  var permGranted by remember { mutableStateOf(canDrawOverlays(ctx)) }
 
   val permGrantLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.StartActivityForResult()
   ) {
-    permGranted = canDrawOverlays(ctx.context)
+    permGranted = canDrawOverlays(ctx)
   }
 
   Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -77,18 +83,18 @@ fun MainScreen(ctx: McContext) {
           ) {
             val intent = Intent(
               ACTION_MANAGE_OVERLAY_PERMISSION,
-              Uri.parse("package:${ctx.context.packageName}")
+              Uri.parse("package:${ctx.packageName}")
             )
 
             permGrantLauncher.launch(intent)
           }
         }
-        EnabledCard(ctx.context)
+        EnabledCard(ctx)
         ButtonCard(Icons.AutoMirrored.Default.List, "配置") {
-          ctx.navController.navigate(ConfigRoute)
+          nav.navigate(ConfigRoute)
         }
         ButtonCard(Icons.Default.Settings, "设置", true) {
-          ctx.navController.navigate(SettingsRoute)
+          nav.navigate(SettingsRoute)
         }
         ButtonCard(Icons.Default.Info, "关于", true) {}
       }
