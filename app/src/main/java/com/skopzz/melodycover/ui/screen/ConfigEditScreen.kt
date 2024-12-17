@@ -1,9 +1,5 @@
 package com.skopzz.melodycover.ui.screen
 
-import android.content.ContentValues.TAG
-import android.content.Context
-import android.preference.PreferenceManager
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -35,12 +31,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import com.skopzz.melodycover.McContext
+import androidx.preference.PreferenceManager
 import com.skopzz.melodycover.cover.CoverType
 import com.skopzz.melodycover.cover.getImagePath
 import com.skopzz.melodycover.cover.saveCoverConfiguration

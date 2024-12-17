@@ -13,6 +13,7 @@ activityCompose = "1.8.0"
 composeBom = "2024.04.01"
 materialIconsCore = "1.7.5"
 navVersion = "2.8.4"
+preferenceKtx = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -23,6 +24,7 @@ androidx-navigation-dynamic-features-fragment = { module = "androidx.navigation:
 androidx-navigation-fragment = { module = "androidx.navigation:navigation-fragment", version.ref = "navVersion" }
 androidx-navigation-testing = { module = "androidx.navigation:navigation-testing", version.ref = "navVersion" }
 androidx-navigation-ui = { module = "androidx.navigation:navigation-ui", version.ref = "navVersion" }
+androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
 colorpicker-compose = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpickerCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

@@ -26,6 +26,7 @@ android {
         getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"
       )
+      signingConfig = signingConfigs.getByName("debug")
     }
   }
   compileOptions {
@@ -51,7 +52,6 @@ dependencies {
   implementation(libs.androidx.ui.tooling.preview)
   implementation(libs.androidx.material3)
   runtimeOnly(libs.androidx.material.icons.core)
-  implementation(libs.preference.compose) // todo remove this since we have made our own pref lib
   implementation(libs.colorpicker.compose)
 
   // nav stuff
@@ -61,6 +61,8 @@ dependencies {
   implementation(libs.androidx.navigation.dynamic.features.fragment)
   androidTestImplementation(libs.androidx.navigation.testing)
   implementation(libs.kotlinx.serialization.json)
+
+  implementation(libs.androidx.preference.ktx)
 
   implementation(libs.androidx.lifecycle.viewmodel.compose)
 

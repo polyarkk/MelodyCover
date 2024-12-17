@@ -2,7 +2,7 @@ package com.skopzz.melodycover.service
 
 import android.content.SharedPreferences
 import android.os.Build
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import android.service.quicksettings.Tile.STATE_ACTIVE
 import android.service.quicksettings.Tile.STATE_INACTIVE
 import android.service.quicksettings.TileService

@@ -1,6 +1,5 @@
 package com.skopzz.melodycover.cover
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
@@ -9,8 +8,8 @@ import android.graphics.drawable.Drawable
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import com.skopzz.melodycover.R.*
 
-@SuppressLint("ViewConstructor", "SetTextI18n")
 class Cover(
   val ctx: Context,
   var configuration: CoverConfiguration = CoverConfiguration(),
@@ -21,14 +20,14 @@ class Cover(
     configuration.height
   )
 
-  var editModeTextView: TextView? = null;
+  var editModeTextView: TextView? = null
 
   init {
     setLayoutParams(layoutParams)
     update(configuration)
     if (editMode) {
       editModeTextView = TextView(ctx).apply {
-        text = "${this@Cover.layoutParams.width}x${this@Cover.layoutParams.height}"
+        text = ctx.getString(string.width_height, this@Cover.layoutParams.width, this@Cover.layoutParams.height)
         textSize = 20f
         setTextColor(Color.BLACK)
         setBackgroundColor(Color.WHITE)
@@ -43,6 +42,8 @@ class Cover(
       addView(editModeTextView)
     }
   }
+
+  constructor(ctx: Context) : this(ctx, CoverConfiguration(), false)
 
   fun update(conf: CoverConfiguration) {
     when (conf.coverType) {
@@ -86,7 +87,7 @@ class Cover(
     }
 
     if (editModeTextView != null) {
-      editModeTextView!!.text = "${layoutParams.width}x${layoutParams.height}"
+      editModeTextView!!.text = ctx.getString(string.width_height, layoutParams.width, layoutParams.height)
     }
 
     configuration = conf

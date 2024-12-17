@@ -38,12 +38,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import com.skopzz.melodycover.McContext
+import com.skopzz.melodycover.R
 import com.skopzz.melodycover.service.CoverService
 import com.skopzz.melodycover.ui.ConfigRoute
 import com.skopzz.melodycover.ui.SettingsRoute
@@ -69,7 +67,7 @@ fun MainScreen(nav: NavController) {
     ) {
       Column {
         Text(
-          "MelodyCover",
+          ctx.getString(R.string.app_name),
           fontSize = 32.sp,
           modifier = Modifier.padding(8.dp, 24.dp, 0.dp, 8.dp)
         )
@@ -141,7 +139,7 @@ fun ButtonCard(
   bgColor: Color = CardDefaults.cardColors().containerColor,
   textColor: Color = Color.Companion.Unspecified,
   iconColor: Color = LocalContentColor.current,
-  onClick: () -> Unit
+  onClick: () -> Unit,
 ) {
   val defaultColors = CardDefaults.cardColors()
 

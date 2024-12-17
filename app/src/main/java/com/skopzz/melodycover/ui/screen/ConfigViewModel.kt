@@ -2,10 +2,9 @@ package com.skopzz.melodycover.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.preference.PreferenceManager
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import com.skopzz.melodycover.COVER_DIR
 import com.skopzz.melodycover.cover.CoverConfiguration
 import com.skopzz.melodycover.cover.getImagePath
