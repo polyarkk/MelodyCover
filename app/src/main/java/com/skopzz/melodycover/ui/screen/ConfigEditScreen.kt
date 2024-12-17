@@ -42,9 +42,10 @@ import com.skopzz.melodycover.service.CoverService
 import com.skopzz.melodycover.ui.ConfigRoute
 import com.skopzz.melodycover.ui.MainRoute
 import com.skopzz.melodycover.ui.component.CoverPreview
-import com.skopzz.melodycover.ui.component.preference.BasePreference
+import com.skopzz.melodycover.ui.component.preference.Preference
 import com.skopzz.melodycover.ui.component.preference.ColorPreference
 import com.skopzz.melodycover.ui.component.preference.EnumPreference
+import com.skopzz.melodycover.ui.component.preference.PreferenceCategory
 import com.skopzz.melodycover.ui.component.preference.SliderPreference
 import com.skopzz.melodycover.ui.component.preference.TextFieldPreference
 import com.skopzz.melodycover.util.copyFileFromUri
@@ -140,6 +141,7 @@ fun ConfigEditScreen(nav: NavController, key: String) {
           .widthIn(max = 800.dp)
           .verticalScroll(scrollState),
       ) {
+        PreferenceCategory("基本信息")
         TextFieldPreference(
           title = { Text("名称") },
           v = uiState.conf.name,
@@ -177,6 +179,7 @@ fun ConfigEditScreen(nav: NavController, key: String) {
                 }
               }
             )
+            PreferenceCategory("尺寸")
             SliderPreference(
               title = { Text("宽度") },
               summary = {
@@ -218,13 +221,14 @@ fun ConfigEditScreen(nav: NavController, key: String) {
               }
             }
 
-            BasePreference(
+            Preference(
               title = { Text("选择图片") },
               v = null,
               onClick = {
                 pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
               }
             )
+            PreferenceCategory("图片")
             SliderPreference(
               title = { Text("缩放倍率") },
               summary = {

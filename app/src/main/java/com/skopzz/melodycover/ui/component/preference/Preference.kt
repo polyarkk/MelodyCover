@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun <T> BasePreference(
+fun <T> Preference(
   title: @Composable (T) -> Unit,
   summary: (@Composable (T) -> Unit)? = null,
   v: T,
@@ -27,10 +27,10 @@ fun <T> BasePreference(
   onClick: (T) -> Unit = {},
 ) {
   Column(
-    modifier = Modifier.Companion.padding(0.dp, 8.dp, 16.dp, 8.dp)
+    modifier = Modifier.padding(0.dp, 4.dp, 16.dp, 4.dp)
   ) {
     Row(
-      modifier = Modifier.Companion
+      modifier = Modifier
         .height(48.dp)
         .clickable(enabled, onClick = { onClick(v) }),
       verticalAlignment = Alignment.Companion.CenterVertically
@@ -38,7 +38,7 @@ fun <T> BasePreference(
       if (leftWidget != null) {
         leftWidget(v)
       } else {
-        Spacer(Modifier.Companion.size(48.dp))
+        Spacer(Modifier.size(48.dp))
       }
       Column {
         ProvideTextStyle(
@@ -59,11 +59,11 @@ fun <T> BasePreference(
           )
         }
       }
-      Spacer(modifier = Modifier.Companion.weight(1f))
+      Spacer(modifier = Modifier.weight(1f))
       rightWidget?.invoke(v)
     }
     if (bottomWidget != null) {
-      Box(modifier = Modifier.Companion.padding(start = 16.dp)) {
+      Box(modifier = Modifier.padding(start = 16.dp)) {
         bottomWidget(v)
       }
     }

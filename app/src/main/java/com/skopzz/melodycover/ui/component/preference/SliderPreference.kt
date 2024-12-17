@@ -12,7 +12,7 @@ inline fun <reified T> SliderPreference(
   crossinline onValueChange: (T) -> Unit,
   range: ClosedRange<T>,
 ) where T : Comparable<T>, T : Number {
-  BasePreference(
+  Preference(
     title,
     summary,
     v,

@@ -23,7 +23,7 @@ fun ColorPreference(
 ) {
   var showDialog by remember { mutableStateOf(false) }
 
-  BasePreference(
+  Preference(
     title,
     summary,
     v,

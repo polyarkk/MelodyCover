@@ -9,9 +9,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Check
@@ -65,11 +67,15 @@ fun MainScreen(nav: NavController) {
         .fillMaxSize()
         .padding(innerPadding)
     ) {
-      Column {
+      Column(
+        modifier = Modifier
+          .widthIn(max = 512.dp)
+          .padding(horizontal = 36.dp)
+      ) {
         Text(
           ctx.getString(R.string.app_name),
           fontSize = 32.sp,
-          modifier = Modifier.padding(8.dp, 24.dp, 0.dp, 8.dp)
+          modifier = Modifier.padding(start = 8.dp, top = 24.dp, bottom = 12.dp)
         )
         if (!permGranted) {
           ButtonCard(

@@ -1,5 +1,6 @@
 package com.skopzz.melodycover.ui.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -66,6 +67,11 @@ fun ConfigScreen(nav: NavController) {
 
   val scope = rememberCoroutineScope()
   val snackbarHostState = remember { SnackbarHostState() }
+
+  BackHandler {
+    vm.deleteConfiguration()
+    nav.navigateUp()
+  }
 
   Scaffold(
     snackbarHost = { SnackbarHost(hostState = snackbarHostState) },

@@ -13,7 +13,7 @@ fun TextFieldPreference(
   v: String,
   onValueChange: (String) -> Unit,
 ) {
-  BasePreference(
+  Preference(
     title,
     summary,
     v,

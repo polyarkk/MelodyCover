@@ -27,7 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.skopzz.melodycover.service.CoverService
-import com.skopzz.melodycover.ui.component.preference.BasePreference
+import com.skopzz.melodycover.ui.component.preference.Preference
+import com.skopzz.melodycover.ui.component.preference.PreferenceCategory
 import com.skopzz.melodycover.ui.component.preference.SwitchPreference
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,12 +72,13 @@ fun SettingsScreen(nav: NavController) {
           .widthIn(max = 800.dp)
           .verticalScroll(scrollState),
       ) {
+        PreferenceCategory("位置")
         SwitchPreference(
           title = { Text("锁定水平位置") },
           v = uiState.lockHorizontalPosition,
           onValueChange = { vm.set("lock_horizontal_position", it) }
         )
-        BasePreference(
+        Preference(
           title = { Text("重置水平位置") },
           summary = { Text("将上隐条置于水平居中位置") },
           v = null,
@@ -89,7 +91,7 @@ fun SettingsScreen(nav: NavController) {
           v = uiState.lockVerticalPosition,
           onValueChange = { vm.set("lock_vertical_position", it) }
         )
-        BasePreference(
+        Preference(
           title = { Text("重置垂直位置") },
           summary = { Text("将上隐条置于顶部位置") },
           v = null,
@@ -97,6 +99,7 @@ fun SettingsScreen(nav: NavController) {
             CoverService.sendIo(ctx, "setY", 0)
           }
         )
+        PreferenceCategory("操作")
         SwitchPreference(
           title = { Text("连续三次点按关闭上隐条") },
           v = uiState.gestureClose,

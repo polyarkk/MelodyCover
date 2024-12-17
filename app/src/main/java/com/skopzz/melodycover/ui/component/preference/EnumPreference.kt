@@ -18,7 +18,7 @@ fun <T : Enum<T>> EnumPreference(
 ) {
   var showDialog by remember { mutableStateOf(false) }
 
-  BasePreference(
+  Preference(
     title = title,
     summary = {
       val idx = values.indexOf(it);

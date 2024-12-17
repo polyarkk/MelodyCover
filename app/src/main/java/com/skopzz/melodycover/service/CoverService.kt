@@ -127,11 +127,11 @@ class CoverService : Service() {
       }
 
       MotionEvent.ACTION_MOVE -> {
-        if (!sharedPreferences.get("lock_vertical_position", false)) {
+        if (!sharedPreferences.get("lock_horizontal_position", true)) {
           windowLayoutParams.x = (x + e.rawX - touchX).toInt()
         }
 
-        if (!sharedPreferences.get("lock_horizontal_position", false)) {
+        if (!sharedPreferences.get("lock_vertical_position", false)) {
           windowLayoutParams.y = (y + e.rawY - touchY).toInt()
         }
 

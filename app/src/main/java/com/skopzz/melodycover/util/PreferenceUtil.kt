@@ -6,7 +6,14 @@ import android.content.SharedPreferences
 fun <T> SharedPreferences.get(k: String?): T? = all[k] as T?
 
 @Suppress("UNCHECKED_CAST")
-fun <T> SharedPreferences.get(k: String?, defaultValue: T): T = all[k] as T? ?: defaultValue
+fun <T> SharedPreferences.get(k: String?, defaultValue: T): T {
+  return all[k] as T? ?: defaultValue.let {
+    set(k, defaultValue)
+
+    return defaultValue
+  }
+}
+
 fun SharedPreferences.set(k: String?, v: Any?): SharedPreferences {
   val editor = edit()
 

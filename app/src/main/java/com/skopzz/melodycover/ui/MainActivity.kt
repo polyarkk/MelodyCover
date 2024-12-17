@@ -47,6 +47,8 @@ class MainActivity : ComponentActivity() {
       requestPermissions.launch(arrayOf(READ_EXTERNAL_STORAGE))
     }
 
+    getExternalFilesDir(null)!!.mkdirs()
+
     if (!existsCoverConfiguration("default")) {
       saveCoverConfiguration(CoverConfiguration())
     }
